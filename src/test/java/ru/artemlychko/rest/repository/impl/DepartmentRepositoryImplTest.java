@@ -11,13 +11,15 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.artemlychko.rest.model.Department;
 import ru.artemlychko.rest.repository.DepartmentRepository;
-import ru.artemlychko.rest.repository.EmployeeRepository;
 import ru.artemlychko.rest.util.PropertiesUtil;
 
 import java.util.Optional;
 
+@Testcontainers
+@Tag("DockerRequired")
 public class DepartmentRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     private static final int containerPort = 5432;

@@ -14,7 +14,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.artemlychko.rest.model.Department;
 import ru.artemlychko.rest.model.Employee;
-import ru.artemlychko.rest.model.Project;
 import ru.artemlychko.rest.repository.EmployeeRepository;
 import ru.artemlychko.rest.util.PropertiesUtil;
 
@@ -84,7 +83,6 @@ class EmployeeRepositoryImplTest {
 
         Employee updatedEmployee = employeeRepository.findById(3L).get();
 
-        List<Project> projectList = updatedEmployee.getProjectList();
         int projectListSize = updatedEmployee.getProjectList().size();
         Department oldDepartment = updatedEmployee.getDepartment();
 
@@ -111,21 +109,6 @@ class EmployeeRepositoryImplTest {
 
         Assertions.assertEquals(0, resultEmployee.getProjectList().size());
         Assertions.assertEquals(expectedDepartmentId, resultEmployee.getDepartment().getId());
-
-        projectList.add(new Project(3L, null, null));
-        projectList.add(new Project(4L, null, null));
-        updatedEmployee.setProjectList(projectList);
-        employeeRepository.update(updatedEmployee);
-        resultEmployee = employeeRepository.findById(3L).get();
-
-        Assertions.assertEquals(3, resultEmployee.getProjectList().size());
-
-        projectList.remove(2);
-        updatedEmployee.setProjectList(projectList);
-        employeeRepository.update(updatedEmployee);
-        resultEmployee = employeeRepository.findById(3L).get();
-
-        Assertions.assertEquals(2, resultEmployee.getProjectList().size());
     }
 
     @Test

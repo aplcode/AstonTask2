@@ -1,13 +1,10 @@
 package ru.artemlychko.rest.model;
 
-import ru.artemlychko.rest.repository.EmployeeRepository;
-import ru.artemlychko.rest.repository.impl.EmployeeRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Department {
-    private static final EmployeeRepository employeeRepository = EmployeeRepositoryImpl.getInstance();
     private Long id;
     private String name;
     private List<Employee> employeeList;
@@ -39,7 +36,7 @@ public class Department {
 
     public List<Employee> getEmployeeList() {
         if (employeeList == null) {
-            employeeList = employeeRepository.findAllByDepartmentId(this.id);
+            employeeList = new ArrayList<>();
         }
         return employeeList;
     }

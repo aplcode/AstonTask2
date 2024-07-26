@@ -124,29 +124,6 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-
-<!--                    <execution>-->
-<!--                        <id>jacoco-check</id>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>test</phase>-->
-<!--&lt;!&ndash;                        <configuration>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <rules>&ndash;&gt;-->
-<!--&lt;!&ndash;                                <rule>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <element>CLASS</element>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <limits>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <limit>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <counter>INSTRUCTION</counter>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <value>MISSEDRATIO</value>&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <maximum>20%</maximum>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        </limit>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </limits>&ndash;&gt;-->
-<!--&lt;!&ndash;                                </rule>&ndash;&gt;-->
-<!--&lt;!&ndash;                            </rules>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </configuration>&ndash;&gt;-->
-<!--                    </execution>-->
-
                 </executions>
             </plugin>
         </plugins>

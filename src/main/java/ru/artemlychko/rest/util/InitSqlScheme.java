@@ -31,6 +31,7 @@ public final class InitSqlScheme {
 
     private static void loadInitSQL() {
         try (InputStream inFile = InitSqlScheme.class.getClassLoader().getResourceAsStream(SCHEME)) {
+            assert inFile != null;
             schemeSql = new String(inFile.readAllBytes(), StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new IllegalStateException();

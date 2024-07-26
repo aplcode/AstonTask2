@@ -49,8 +49,9 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
             """;
 
     private static DepartmentRepository instance;
-    private final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
-    private final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
+    private static final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
+    private static final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
+    private static final EmployeeRepository employeeRepository = EmployeeRepositoryImpl.getInstance();
 
     private DepartmentRepositoryImpl() {
     }
@@ -85,7 +86,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
                 department = new Department(
                         resultSet.getLong("department_id"),
                         department.getName(),
-                        null
+                        employeeRepository.findAllByDepartmentId(resultSet.getLong("department_id"))
                 );
                 department.getEmployeeList();
             }

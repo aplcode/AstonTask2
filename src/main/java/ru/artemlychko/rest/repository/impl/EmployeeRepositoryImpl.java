@@ -53,11 +53,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             WHERE department_id = ?;
             """;
 
+    private static final String EMP_ID = "employee_id";
     private static EmployeeRepository instance;
-    private final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
-    private final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
-    private final ProjectRepository projectRepository = ProjectRepositoryImpl.getInstance();
-    private final DepartmentRepository departmentRepository = DepartmentRepositoryImpl.getInstance();
+    private static final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
+    private static final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
+    private static final ProjectRepository projectRepository = ProjectRepositoryImpl.getInstance();
+    private static final DepartmentRepository departmentRepository = DepartmentRepositoryImpl.getInstance();
 
     private EmployeeRepositoryImpl() {
     }
@@ -86,15 +87,14 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 employee = new Employee(
-                        resultSet.getLong("employee_id"),
+                        resultSet.getLong(EMP_ID),
                         employee.getFirstName(),
                         employee.getLastName(),
                         employee.getDepartment(),
-                        null
+                        employeeToProjectRepository.findProjectsByEmployeeId(resultSet.getLong(EMP_ID))
                 );
             }
             saveProjectList(employee);
-            employee.getProjectList();
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
@@ -136,7 +136,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     @Override
     public void update(Employee employee) {
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
 
             preparedStatement.setString(1, employee.getFirstName());
             preparedStatement.setString(2, employee.getLastName());
@@ -158,7 +158,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     public boolean deleteById(Long id) {
         boolean deleteResult;
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
 
             employeeToProjectRepository.deleteByEmployeeId(id);
 
@@ -213,7 +213,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             preparedStatement.setLong(1, departmentId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Long employeeId = resultSet.getLong("employee_id");
+                Long employeeId = resultSet.getLong(EMP_ID);
                 Optional<Employee> optionalEmployee = findById(employeeId);
                 optionalEmployee.ifPresent(employeeList::add);
             }
@@ -242,7 +242,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     private Employee createEmployee(ResultSet resultSet) throws SQLException {
-        Long employeeId = resultSet.getLong("employee_id");
+        Long employeeId = resultSet.getLong(EMP_ID);
         Department department = departmentRepository.findById(resultSet.getLong("department_id")).orElse(null);
         return new Employee(
                 employeeId,

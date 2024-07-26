@@ -1,14 +1,10 @@
 package ru.artemlychko.rest.model;
 
-import ru.artemlychko.rest.repository.EmployeeRepository;
-import ru.artemlychko.rest.repository.EmployeeToProjectRepository;
-import ru.artemlychko.rest.repository.impl.EmployeeToProjectRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Employee {
-    private static final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
     private Long id;
     private String firstName;
     private String lastName;
@@ -53,7 +49,7 @@ public class Employee {
 
     public List<Project> getProjectList() {
         if (projectList == null) {
-            projectList = employeeToProjectRepository.findProjectsByEmployeeId(this.id);
+            projectList = new ArrayList<>();
         }
         return projectList;
     }

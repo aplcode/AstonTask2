@@ -42,8 +42,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                         LIMIT 1);
             """;
     private static ProjectRepository instance;
-    private final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
-    private final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
+    private static final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
+    private static final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
 
     private ProjectRepositoryImpl() {
     }
@@ -78,9 +78,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 project = new Project(
                         resultSet.getLong("project_id"),
                         project.getName(),
-                        null
+                        employeeToProjectRepository.findEmployeesByProjectId(resultSet.getLong("project_id"))
                 );
-                project.getEmployeeList();
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);

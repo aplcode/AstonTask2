@@ -3,9 +3,7 @@ package ru.artemlychko.rest.service.impl;
 import ru.artemlychko.rest.model.Department;
 import ru.artemlychko.rest.exception.NotFoundException;
 import ru.artemlychko.rest.repository.DepartmentRepository;
-import ru.artemlychko.rest.repository.EmployeeRepository;
 import ru.artemlychko.rest.repository.impl.DepartmentRepositoryImpl;
-import ru.artemlychko.rest.repository.impl.EmployeeRepositoryImpl;
 import ru.artemlychko.rest.service.DepartmentService;
 import ru.artemlychko.rest.servlet.dto.DepartmentInDto;
 import ru.artemlychko.rest.servlet.dto.DepartmentOutDto;
@@ -19,7 +17,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository = DepartmentRepositoryImpl.getInstance();
     private static final DepartmentDtoMapper departmentDtoMapper = DepartmentDtoMapperImpl.getInstance();
-    private final EmployeeRepository employeeRepository = EmployeeRepositoryImpl.getInstance();
     private static DepartmentService instance;
 
     private DepartmentServiceImpl() {

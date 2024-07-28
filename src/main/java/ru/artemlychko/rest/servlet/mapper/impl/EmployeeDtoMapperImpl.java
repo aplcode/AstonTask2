@@ -55,8 +55,8 @@ public class EmployeeDtoMapperImpl implements EmployeeDtoMapper {
                 employee.getId(),
                 employee.getFirstName(),
                 employee.getLastName(),
-                departmentDtoMapper.map(employee.getDepartment()),
-                projectDtoMapper.map(employee.getProjectList())
+                departmentDtoMapper.mapForEmployee(employee.getDepartment()),
+                projectDtoMapper.mapForEmployee(employee.getProjectList())
         );
     }
 

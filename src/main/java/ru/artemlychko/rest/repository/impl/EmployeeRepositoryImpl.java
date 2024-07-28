@@ -48,10 +48,15 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                         WHERE employee_id = ?
                         LIMIT 1);
             """;
-    private static final String FIND_ALL_BY_DEPARTMENT_ID_SQL = """
-            SELECT employee_id, employee_firstname, employee_lastname FROM employees
-            WHERE department_id = ?;
+
+    private static final String FIND_PROJECTS_BY_EMPLOYEE_ID_SQL = """
+            SELECT projects.project_id, projects.project_name 
+            FROM projects
+                LEFT JOIN employees_projects
+                    ON projects.project_id = employees_projects.project_id
+            WHERE employee_id = ?;
             """;
+
 
     private static final String EMP_ID = "employee_id";
     private static EmployeeRepository instance;
@@ -91,7 +96,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                         employee.getFirstName(),
                         employee.getLastName(),
                         employee.getDepartment(),
-                        employeeToProjectRepository.findProjectsByEmployeeId(resultSet.getLong(EMP_ID))
+                        null
                 );
             }
             saveProjectList(employee);
@@ -205,25 +210,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findAllByDepartmentId(Long departmentId) {
-        List<Employee> employeeList = new ArrayList<>();
-        try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_DEPARTMENT_ID_SQL)) {
-
-            preparedStatement.setLong(1, departmentId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Long employeeId = resultSet.getLong(EMP_ID);
-                Optional<Employee> optionalEmployee = findById(employeeId);
-                optionalEmployee.ifPresent(employeeList::add);
-            }
-        } catch (SQLException e) {
-            throw new RepositoryException(e);
-        }
-        return employeeList;
-    }
-
-    @Override
     public boolean existsById(Long id) {
         boolean isExists = false;
         try (Connection connection = connectionManager.getConnection();
@@ -241,6 +227,28 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         return isExists;
     }
 
+    @Override
+    public List<Project> findProjectsByEmployeeId(Long employeeId) {
+        List<Project> projectList = new ArrayList<>();
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_PROJECTS_BY_EMPLOYEE_ID_SQL)) {
+
+            preparedStatement.setLong(1, employeeId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Project project = new Project(
+                        resultSet.getLong("project_id"),
+                        resultSet.getString("project_name"),
+                        null
+                );
+                projectList.add(project);
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
+        return projectList;
+    }
+
     private Employee createEmployee(ResultSet resultSet) throws SQLException {
         Long employeeId = resultSet.getLong(EMP_ID);
         Department department = departmentRepository.findById(resultSet.getLong("department_id")).orElse(null);
@@ -249,7 +257,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 resultSet.getString("employee_firstname"),
                 resultSet.getString("employee_lastname"),
                 department,
-                null
+                findProjectsByEmployeeId(employeeId)
+
         );
     }
 }

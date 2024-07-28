@@ -1,10 +1,7 @@
 package ru.artemlychko.rest.servlet.mapper.impl;
 
 import ru.artemlychko.rest.model.Department;
-import ru.artemlychko.rest.servlet.dto.DepartmentInDto;
-import ru.artemlychko.rest.servlet.dto.DepartmentOutDto;
-import ru.artemlychko.rest.servlet.dto.DepartmentUpdateDto;
-import ru.artemlychko.rest.servlet.dto.EmployeeShortOutDto;
+import ru.artemlychko.rest.servlet.dto.*;
 import ru.artemlychko.rest.servlet.mapper.DepartmentDtoMapper;
 
 import java.util.List;
@@ -50,6 +47,14 @@ public class DepartmentDtoMapperImpl implements DepartmentDtoMapper {
                 department.getName(),
                 employeeList
 
+        );
+    }
+
+    @Override
+    public DepartmentShortOutDto mapForEmployee(Department department) {
+        return new DepartmentShortOutDto(
+                department.getId(),
+                department.getName()
         );
     }
 

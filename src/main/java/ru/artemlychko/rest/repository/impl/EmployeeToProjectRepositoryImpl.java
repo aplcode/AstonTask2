@@ -17,8 +17,6 @@ import java.util.Optional;
 
 public class EmployeeToProjectRepositoryImpl implements EmployeeToProjectRepository{
     private static final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
-    private static final ProjectRepository projectRepository = ProjectRepositoryImpl.getInstance();
-    private static final EmployeeRepository employeeRepository = EmployeeRepositoryImpl.getInstance();
 
     private static final String SAVE_SQL = """
             INSERT INTO employees_projects (employee_id, project_id)
@@ -200,18 +198,18 @@ public class EmployeeToProjectRepositoryImpl implements EmployeeToProjectReposit
 
     @Override
     public List<EmployeeToProject> findAll() {
-        List<EmployeeToProject> userToDepartmentList = new ArrayList<>();
+        List<EmployeeToProject> userToProjectList = new ArrayList<>();
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                userToDepartmentList.add(createEmployeeToProject(resultSet));
+                userToProjectList.add(createEmployeeToProject(resultSet));
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
-        return userToDepartmentList;
+        return userToProjectList;
     }
 
     @Override
@@ -232,78 +230,42 @@ public class EmployeeToProjectRepositoryImpl implements EmployeeToProjectReposit
         return isExists;
     }
 
-    public List<EmployeeToProject> findAllByEmployeeId(Long employeeId) {
-        List<EmployeeToProject> userToDepartmentList = new ArrayList<>();
-        try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_EMPLOYEE_ID_SQL)) {
-
-            preparedStatement.setLong(1, employeeId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                userToDepartmentList.add(createEmployeeToProject(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new RepositoryException(e);
-        }
-        return userToDepartmentList;
-    }
-
     @Override
-    public List<Project> findProjectsByEmployeeId(Long employeeId) {
-        List<Project> projectList = new ArrayList<>();
+    public List<EmployeeToProject> findAllByEmployeeId(Long employeeId) {
+        List<EmployeeToProject> employeeToProjectList = new ArrayList<>();
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_EMPLOYEE_ID_SQL)) {
 
             preparedStatement.setLong(1, employeeId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Long projectId = resultSet.getLong("project_id");
-                Optional<Project> optionalProject = projectRepository.findById(projectId);
-                optionalProject.ifPresent(projectList::add);
+                employeeToProjectList.add(createEmployeeToProject(resultSet));
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
-        return projectList;
+        return employeeToProjectList;
     }
 
     public List<EmployeeToProject> findAllByProjectId(Long projectId) {
-        List<EmployeeToProject> userToDepartmentList = new ArrayList<>();
+        List<EmployeeToProject> employeeToProjectList = new ArrayList<>();
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_PROJECT_ID_SQL)) {
 
             preparedStatement.setLong(1, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                userToDepartmentList.add(createEmployeeToProject(resultSet));
+                employeeToProjectList.add(createEmployeeToProject(resultSet));
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
-        return userToDepartmentList;
-    }
-
-    public List<Employee> findEmployeesByProjectId(Long projectId) {
-        List<Employee> userList = new ArrayList<>();
-        try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_PROJECT_ID_SQL)) {
-
-            preparedStatement.setLong(1, projectId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                long employeeId = resultSet.getLong("employee_id");
-                Optional<Employee> optionalUser = employeeRepository.findById(employeeId);
-                optionalUser.ifPresent(userList::add);
-            }
-        } catch (SQLException e) {
-            throw new RepositoryException(e);
-        }
-        return userList;
+        return employeeToProjectList;
     }
 
     @Override
     public Optional<EmployeeToProject> findByEmployeeIdAndProjectId(Long employeeId, Long projectId) {
-        Optional<EmployeeToProject> userToDepartment = Optional.empty();
+        Optional<EmployeeToProject> employeeToProject = Optional.empty();
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_EMPLOYEE_ID_AND_PROJECT_ID_SQL)) {
 
@@ -311,12 +273,12 @@ public class EmployeeToProjectRepositoryImpl implements EmployeeToProjectReposit
             preparedStatement.setLong(2, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                userToDepartment = Optional.of(createEmployeeToProject(resultSet));
+                employeeToProject = Optional.of(createEmployeeToProject(resultSet));
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
-        return userToDepartment;
+        return employeeToProject;
     }
 
 

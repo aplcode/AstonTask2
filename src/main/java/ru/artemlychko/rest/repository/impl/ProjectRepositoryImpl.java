@@ -2,6 +2,7 @@ package ru.artemlychko.rest.repository.impl;
 
 import ru.artemlychko.rest.db.ConnectionManager;
 import ru.artemlychko.rest.db.ConnectionManagerImpl;
+import ru.artemlychko.rest.model.Employee;
 import ru.artemlychko.rest.model.Project;
 import ru.artemlychko.rest.exception.RepositoryException;
 import ru.artemlychko.rest.repository.EmployeeToProjectRepository;
@@ -41,6 +42,14 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                         WHERE project_id = ?
                         LIMIT 1);
             """;
+    private static final String FIND_ALL_BY_PROJECT_ID_SQL = """
+            SELECT employees.employee_id, employees.employee_firstname, employees.employee_lastname 
+            FROM employees
+                LEFT JOIN employees_projects
+                    ON employees.employee_id = employees_projects.employee_id
+            WHERE project_id = ?;
+            """;
+
     private static ProjectRepository instance;
     private static final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
     private static final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
@@ -55,12 +64,12 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         return instance;
     }
 
-    private static Project createProject(ResultSet resultSet) throws SQLException {
+    private Project createProject(ResultSet resultSet) throws SQLException {
         Project project;
         project = new Project(
                 resultSet.getLong("project_id"),
                 resultSet.getString("project_name"),
-                null);
+                findEmployeesByProjectId(resultSet.getLong("project_id")));
         return project;
     }
 
@@ -78,7 +87,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 project = new Project(
                         resultSet.getLong("project_id"),
                         project.getName(),
-                        employeeToProjectRepository.findEmployeesByProjectId(resultSet.getLong("project_id"))
+                        null
                 );
             }
         } catch (SQLException e) {
@@ -151,6 +160,29 @@ public class ProjectRepositoryImpl implements ProjectRepository {
             throw new RepositoryException(e);
         }
         return projectList;
+    }
+
+    public List<Employee> findEmployeesByProjectId(Long projectId) {
+        List<Employee> employeeList = new ArrayList<>();
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_PROJECT_ID_SQL)) {
+
+            preparedStatement.setLong(1, projectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Employee employee = new Employee(
+                        resultSet.getLong("employee_id"),
+                        resultSet.getString("employee_firstname"),
+                        resultSet.getString("employee_lastname"),
+                        null,
+                        null
+                );
+                employeeList.add(employee);
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
+        return employeeList;
     }
 
     @Override

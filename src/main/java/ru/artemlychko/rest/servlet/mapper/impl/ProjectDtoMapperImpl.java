@@ -1,10 +1,7 @@
 package ru.artemlychko.rest.servlet.mapper.impl;
 
 import ru.artemlychko.rest.model.Project;
-import ru.artemlychko.rest.servlet.dto.EmployeeShortOutDto;
-import ru.artemlychko.rest.servlet.dto.ProjectInDto;
-import ru.artemlychko.rest.servlet.dto.ProjectOutDto;
-import ru.artemlychko.rest.servlet.dto.ProjectUpdateDto;
+import ru.artemlychko.rest.servlet.dto.*;
 import ru.artemlychko.rest.servlet.mapper.ProjectDtoMapper;
 
 import java.util.List;
@@ -57,8 +54,21 @@ public class ProjectDtoMapperImpl implements ProjectDtoMapper {
     }
 
     @Override
+    public ProjectShortOutDto mapForEmployee(Project project) {
+        return new ProjectShortOutDto(
+                project.getId(),
+                project.getName()
+        );
+    }
+
+    @Override
     public List<ProjectOutDto> map(List<Project> projectList) {
         return projectList.stream().map(this::map).toList();
+    }
+
+    @Override
+    public List<ProjectShortOutDto> mapForEmployee(List<Project> projectList) {
+        return projectList.stream().map(this::mapForEmployee).toList();
     }
 
     @Override

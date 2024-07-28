@@ -23,7 +23,7 @@ import java.util.Optional;
 public class DepartmentRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     private static final int containerPort = 5432;
-    private static final int localPort = 5432;
+    private static final int localPort = 8081;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
             .withDatabaseName("postgres")
@@ -107,9 +107,7 @@ public class DepartmentRepositoryImplTest {
     void findById(Long expectedId, Boolean expectedValue) {
         Optional<Department> department = departmentRepository.findById(expectedId);
         Assertions.assertEquals(expectedValue, department.isPresent());
-        if (department.isPresent()) {
-            Assertions.assertEquals(expectedId, department.get().getId());
-        }
+        department.ifPresent(value -> Assertions.assertEquals(expectedId, value.getId()));
     }
 
     @Test

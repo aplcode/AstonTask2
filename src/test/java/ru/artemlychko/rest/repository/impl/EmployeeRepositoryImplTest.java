@@ -25,7 +25,7 @@ import java.util.Optional;
 class EmployeeRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     private static final int containerPort = 5432;
-    private static final int localPort = 5432;
+    private static final int localPort = 8081;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
             .withDatabaseName("postgres")
@@ -166,4 +166,18 @@ class EmployeeRepositoryImplTest {
 
         Assertions.assertEquals(expectedValue, isUserExist);
     }
+
+    @DisplayName("Find projects by employee Id.")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "3, 1",
+            "6, 2",
+            "1000, 0"
+    })
+    void findProjectsByEmployeeId(Long employeeId, int expectedSize) {
+        int resultSize = employeeRepository.findProjectsByEmployeeId(employeeId).size();
+
+        Assertions.assertEquals(expectedSize, resultSize);
+    }
+
 }

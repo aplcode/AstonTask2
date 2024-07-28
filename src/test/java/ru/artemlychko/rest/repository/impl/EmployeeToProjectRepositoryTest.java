@@ -24,7 +24,7 @@ class EmployeeToProjectRepositoryTest {
     private static final String INIT_SQL = "sql/schema.sql";
     public static EmployeeToProjectRepository employeeToProjectRepository;
     private static int containerPort = 5432;
-    private static int localPort = 5432;
+    private static int localPort = 8081;
 
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
@@ -201,47 +201,6 @@ class EmployeeToProjectRepositoryTest {
     })
     void findAllByUserId(Long employeeId, int expectedSize) {
         int resultSize = employeeToProjectRepository.findAllByEmployeeId(employeeId).size();
-
-        Assertions.assertEquals(expectedSize, resultSize);
-    }
-
-    @DisplayName("Find projects by employee Id.")
-    @ParameterizedTest
-    @CsvSource(value = {
-            "3, 1",
-            "6, 2",
-            "1000, 0"
-    })
-    void findProjectsByEmployeeId(Long employeeId, int expectedSize) {
-        int resultSize = employeeToProjectRepository.findProjectsByEmployeeId(employeeId).size();
-
-        Assertions.assertEquals(expectedSize, resultSize);
-    }
-
-    @DisplayName("Find all by project Id.")
-    @ParameterizedTest
-    @CsvSource(value = {
-            "1, 3",
-            "2, 3",
-            "3, 1",
-            "1000, 0"
-    })
-    void findAllByProjectId(Long projectId, int expectedSize) {
-        int resultSize = employeeToProjectRepository.findEmployeesByProjectId(projectId).size();
-
-        Assertions.assertEquals(expectedSize, resultSize);
-    }
-
-    @DisplayName("Find employees by project Id.")
-    @ParameterizedTest
-    @CsvSource(value = {
-            "1, 3",
-            "2, 3",
-            "3, 1",
-            "1000, 0"
-    })
-    void findEmployeesByProjectId(Long projectId, int expectedSize) {
-        int resultSize = employeeToProjectRepository.findEmployeesByProjectId(projectId).size();
 
         Assertions.assertEquals(expectedSize, resultSize);
     }

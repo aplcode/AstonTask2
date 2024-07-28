@@ -14,11 +14,7 @@ public interface EmployeeToProjectRepository extends Repository<EmployeeToProjec
 
     List<EmployeeToProject> findAllByEmployeeId(Long employeeId);
 
-    List<Project> findProjectsByEmployeeId(Long employeeId);
-
     List<EmployeeToProject> findAllByProjectId(Long projectId);
-
-    List<Employee> findEmployeesByProjectId(Long projectId);
 
     Optional<EmployeeToProject> findByEmployeeIdAndProjectId(Long employeeId, Long projectId);
 }

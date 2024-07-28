@@ -7,13 +7,13 @@ public class EmployeeOutDto {
     private String firstName;
     private String lastName;
 
-    private DepartmentOutDto department;
-    private List<ProjectOutDto> projectList;
+    private DepartmentShortOutDto department;
+    private List<ProjectShortOutDto> projectList;
 
     public EmployeeOutDto() {
     }
 
-    public EmployeeOutDto(Long id, String firstName, String lastName, DepartmentOutDto department, List<ProjectOutDto> projectList) {
+    public EmployeeOutDto(Long id, String firstName, String lastName, DepartmentShortOutDto department, List<ProjectShortOutDto> projectList) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,11 +33,11 @@ public class EmployeeOutDto {
         return lastName;
     }
 
-    public DepartmentOutDto getDepartment() {
+    public DepartmentShortOutDto getDepartment() {
         return department;
     }
 
-    public List<ProjectOutDto> getProjectList() {
+    public List<ProjectShortOutDto> getProjectList() {
         return projectList;
     }
 }

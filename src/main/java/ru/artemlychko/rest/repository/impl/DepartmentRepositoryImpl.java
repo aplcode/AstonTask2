@@ -48,10 +48,14 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
             WHERE department_id = ? ;
             """;
 
+    private static final String FIND_EMPLOYEES_BY_DEPARTMENT_ID_SQL = """
+            SELECT employee_id, employee_firstname, employee_lastname FROM employees
+            WHERE department_id = ?;
+            """;
+
     private static DepartmentRepository instance;
     private static final ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
     private static final EmployeeToProjectRepository employeeToProjectRepository = EmployeeToProjectRepositoryImpl.getInstance();
-    private static final EmployeeRepository employeeRepository = EmployeeRepositoryImpl.getInstance();
 
     private DepartmentRepositoryImpl() {
     }
@@ -63,13 +67,11 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         return instance;
     }
 
-    private static Department createDepartment(ResultSet resultSet) throws SQLException {
-        Department department;
-        department = new Department(
+    private Department createDepartment(ResultSet resultSet) throws SQLException {
+        return new Department(
                 resultSet.getLong("department_id"),
                 resultSet.getString("department_name"),
-                null);
-        return department;
+                findEmployeesByDepartmentId(resultSet.getLong("department_id")));
     }
 
     @Override
@@ -86,9 +88,8 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
                 department = new Department(
                         resultSet.getLong("department_id"),
                         department.getName(),
-                        employeeRepository.findAllByDepartmentId(resultSet.getLong("department_id"))
+                        null
                 );
-                department.getEmployeeList();
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
@@ -153,20 +154,19 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
 
     @Override
     public List<Department> findAll() {
-        List<Department> roleList = new ArrayList<>();
+        List<Department> departmentList = new ArrayList<>();
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                roleList.add(createDepartment(resultSet));
+                departmentList.add(createDepartment(resultSet));
             }
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
-        return roleList;
+        return departmentList;
     }
-
 
     @Override
     public boolean existsById(Long id) {
@@ -184,5 +184,29 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
             throw new RepositoryException(e);
         }
         return isExists;
+    }
+
+    public List<Employee> findEmployeesByDepartmentId(Long departmentId) {
+        List<Employee> employeeList = new ArrayList<>();
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_EMPLOYEES_BY_DEPARTMENT_ID_SQL)) {
+
+            preparedStatement.setLong(1, departmentId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+
+                Employee employee = new Employee(
+                        resultSet.getLong("employee_id"),
+                        resultSet.getString("employee_firstname"),
+                        resultSet.getString("employee_lastname"),
+                        null,
+                        null
+                );
+                employeeList.add(employee);
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
+        return employeeList;
     }
 }

@@ -25,7 +25,7 @@ class ProjectRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     public static ProjectRepository projectRepository;
     private static int containerPort = 5432;
-    private static int localPort = 5432;
+    private static int localPort = 8081;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
             .withDatabaseName("postgres")
@@ -117,9 +117,7 @@ class ProjectRepositoryImplTest {
         Optional<Project> project = projectRepository.findById(expectedId);
 
         Assertions.assertEquals(expectedValue, project.isPresent());
-        if (project.isPresent()) {
-            Assertions.assertEquals(expectedId, project.get().getId());
-        }
+        project.ifPresent(value -> Assertions.assertEquals(expectedId, value.getId()));
     }
 
     @Test
@@ -141,6 +139,20 @@ class ProjectRepositoryImplTest {
         boolean isRoleExist = projectRepository.existsById(projectId);
 
         Assertions.assertEquals(expectedValue, isRoleExist);
+    }
+
+    @DisplayName("Find employees by project Id.")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1, 3",
+            "2, 3",
+            "3, 1",
+            "1000, 0"
+    })
+    void findEmployeesByProjectId(Long projectId, int expectedSize) {
+        int resultSize = projectRepository.findEmployeesByProjectId(projectId).size();
+
+        Assertions.assertEquals(expectedSize, resultSize);
     }
 
 }

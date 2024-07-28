@@ -25,7 +25,7 @@ class ProjectRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     public static ProjectRepository projectRepository;
     private static int containerPort = 5432;
-    private static int localPort = 8081;
+    private static int localPort = 5432;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
             .withDatabaseName("postgres")

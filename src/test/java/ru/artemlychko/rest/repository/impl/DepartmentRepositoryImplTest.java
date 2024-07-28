@@ -23,7 +23,7 @@ import java.util.Optional;
 public class DepartmentRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     private static final int containerPort = 5432;
-    private static final int localPort = 8081;
+    private static final int localPort = 5432;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
             .withDatabaseName("postgres")

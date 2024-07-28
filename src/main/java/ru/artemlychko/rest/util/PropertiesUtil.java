@@ -25,5 +25,4 @@ public final class PropertiesUtil {
             throw new IllegalStateException();
         }
     }
-
 }

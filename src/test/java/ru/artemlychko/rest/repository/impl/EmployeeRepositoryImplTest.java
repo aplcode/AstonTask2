@@ -17,15 +17,15 @@ import ru.artemlychko.rest.model.Employee;
 import ru.artemlychko.rest.repository.EmployeeRepository;
 import ru.artemlychko.rest.util.PropertiesUtil;
 
-import java.util.List;
 import java.util.Optional;
+
 
 @Testcontainers
 @Tag("DockerRequired")
 class EmployeeRepositoryImplTest {
     private static final String INIT_SQL = "sql/schema.sql";
     private static final int containerPort = 5432;
-    private static final int localPort = 8081;
+    private static final int localPort = 5432;
     @Container
     public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:13.3")
             .withDatabaseName("postgres")

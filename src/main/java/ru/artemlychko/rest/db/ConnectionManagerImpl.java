@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public class ConnectionManagerImpl implements ConnectionManager {
     private static final String DRIVER_CLASS_KEY = "db.driver-class-name";
     private static final String URL_KEY = "db.url";
+    private static final String TEST_URL_KEY = "jdbc:postgresql://localhost:5432/postgres";
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
     private static ConnectionManager instance;
@@ -35,10 +36,20 @@ public class ConnectionManagerImpl implements ConnectionManager {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(
-                PropertiesUtil.getProperties(URL_KEY),
-                PropertiesUtil.getProperties(USERNAME_KEY),
-                PropertiesUtil.getProperties(PASSWORD_KEY)
-        );
+        Connection connection;
+        try {
+            connection = DriverManager.getConnection(
+                    TEST_URL_KEY,
+                    PropertiesUtil.getProperties(USERNAME_KEY),
+                    PropertiesUtil.getProperties(PASSWORD_KEY)
+            );
+        } catch (Exception e) {
+            connection = DriverManager.getConnection(
+                    PropertiesUtil.getProperties(URL_KEY),
+                    PropertiesUtil.getProperties(USERNAME_KEY),
+                    PropertiesUtil.getProperties(PASSWORD_KEY)
+            );
+        }
+        return connection;
     }
 }

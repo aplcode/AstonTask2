@@ -6,7 +6,6 @@ import ru.artemlychko.rest.exception.RepositoryException;
 import ru.artemlychko.rest.model.Department;
 import ru.artemlychko.rest.model.Employee;
 import ru.artemlychko.rest.repository.DepartmentRepository;
-import ru.artemlychko.rest.repository.EmployeeRepository;
 import ru.artemlychko.rest.repository.EmployeeToProjectRepository;
 
 import java.sql.*;

@@ -145,7 +145,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
             preparedStatement.setString(1, employee.getFirstName());
             preparedStatement.setString(2, employee.getLastName());
-            if (employee.getDepartment() == null) {
+            if (employee.getDepartment() == null && departmentRepository.existsById(employee.getDepartment().getId())) {
                 preparedStatement.setNull(3, Types.NULL);
             } else {
                 preparedStatement.setLong(3, employee.getDepartment().getId());
@@ -153,7 +153,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             preparedStatement.setLong(4, employee.getId());
 
             preparedStatement.executeUpdate();
-            saveProjectList(employee);
+            employee.setProjectList(findProjectsByEmployeeId(employee.getId()));
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

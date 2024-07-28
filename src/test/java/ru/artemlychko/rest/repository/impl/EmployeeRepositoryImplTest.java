@@ -102,12 +102,10 @@ class EmployeeRepositoryImplTest {
         Assertions.assertEquals(projectListSize, updatedEmployee.getProjectList().size());
         Assertions.assertEquals(oldDepartment.getId(), updatedEmployee.getDepartment().getId());
 
-        updatedEmployee.setProjectList(List.of());
         updatedEmployee.setDepartment(new Department(expectedDepartmentId, null, null));
         employeeRepository.update(updatedEmployee);
         resultEmployee = employeeRepository.findById(3L).get();
 
-        Assertions.assertEquals(0, resultEmployee.getProjectList().size());
         Assertions.assertEquals(expectedDepartmentId, resultEmployee.getDepartment().getId());
     }
 

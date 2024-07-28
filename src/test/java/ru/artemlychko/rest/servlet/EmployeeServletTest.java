@@ -168,7 +168,8 @@ class EmployeeServletTest {
         Mockito.doReturn("{\"id\": 1," +
                         "\"firstName\":\"" + expectedFirstname + "\"" +
                         ",\"lastName\":\"" + expectedLastname + "\"" +
-                        ", \"department\":{\"id\":1,\"name\":\"Testing\"} " +
+                        ", \"department\":{\"id\":4}, " +
+                        "\"projectList\": [{\"id\": 2}]" +
                         "}",
                 null
         ).when(mockBufferedReader).readLine();

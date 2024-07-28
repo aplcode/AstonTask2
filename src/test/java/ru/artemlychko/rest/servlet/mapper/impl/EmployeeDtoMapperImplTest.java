@@ -41,7 +41,8 @@ class EmployeeDtoMapperImplTest {
                 1L,
                 "fn1",
                 "ln1",
-                new DepartmentUpdateDto(2L, "Department update")
+                new DepartmentUpdateDto(2L, "Department update"),
+                List.of(new ProjectUpdateDto())
         );
         Employee result = employeeDtoMapper.map(employeeUpdateDto);
 
@@ -49,6 +50,7 @@ class EmployeeDtoMapperImplTest {
         Assertions.assertEquals(employeeUpdateDto.getFirstName(), result.getFirstName());
         Assertions.assertEquals(employeeUpdateDto.getLastName(), result.getLastName());
         Assertions.assertEquals(employeeUpdateDto.getDepartment().getId(), result.getDepartment().getId());
+        Assertions.assertEquals(employeeUpdateDto.getProjectList().size(), result.getProjectList().size());
     }
 
     @DisplayName("EmployeeOutDto map(Employee)")

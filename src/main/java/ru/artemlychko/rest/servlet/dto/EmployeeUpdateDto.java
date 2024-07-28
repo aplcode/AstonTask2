@@ -8,15 +8,17 @@ public class EmployeeUpdateDto {
     private String lastName;
 
     private DepartmentUpdateDto department;
+    private List<ProjectUpdateDto> projectList;
 
     public EmployeeUpdateDto() {
     }
 
-    public EmployeeUpdateDto(Long id, String firstName, String lastName, DepartmentUpdateDto department) {
+    public EmployeeUpdateDto(Long id, String firstName, String lastName, DepartmentUpdateDto department, List<ProjectUpdateDto> projectList) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.department = department;
+        this.projectList = projectList;
     }
 
     public Long getId() {
@@ -35,4 +37,7 @@ public class EmployeeUpdateDto {
         return department;
     }
 
+    public List<ProjectUpdateDto> getProjectList() {
+        return projectList;
+    }
 }

@@ -45,7 +45,8 @@ public class EmployeeDtoMapperImpl implements EmployeeDtoMapper {
                 employeeUpdateDto.getFirstName(),
                 employeeUpdateDto.getLastName(),
                 departmentDtoMapper.map(employeeUpdateDto.getDepartment()),
-                null);
+                projectDtoMapper.mapUpdateList(employeeUpdateDto.getProjectList())
+        );
     }
 
     @Override

@@ -74,7 +74,7 @@ class EmployeeServiceImplTest {
         Long expectedId = 1L;
 
         EmployeeUpdateDto employeeUpdateDto = new EmployeeUpdateDto(expectedId, "fn1", "ln1",
-                new DepartmentUpdateDto(1L, "Department1"));
+                new DepartmentUpdateDto(1L, "Department1"), List.of());
 
         Mockito.doReturn(true).when(mockEmployeeRepository).existsById(Mockito.any());
 
@@ -90,7 +90,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void updateWithIllegalArguments() throws IllegalArgumentException {
-        EmployeeUpdateDto employeeUpdateDto = new EmployeeUpdateDto(null, null, null, null);
+        EmployeeUpdateDto employeeUpdateDto = new EmployeeUpdateDto(null, null, null, null, null);
 
         IllegalArgumentException exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
@@ -103,7 +103,7 @@ class EmployeeServiceImplTest {
 
     @Test
     void updateNotFound() {
-        EmployeeUpdateDto employeeUpdateDto = new EmployeeUpdateDto(1L, "fn1", "ln1", null);
+        EmployeeUpdateDto employeeUpdateDto = new EmployeeUpdateDto(1L, "fn1", "ln1", null, null);
 
         Mockito.doReturn(false).when(mockEmployeeRepository).existsById(Mockito.any());
 
